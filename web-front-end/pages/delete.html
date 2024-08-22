@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+</head>
+
+<body>
+    <!-- UI for delete profile-->
+    <h1>Delete Profile</h1>
+    <form id="delete-user-form">
+        <label for="username-delete">Enter the username to be deleted: </label>
+        <input type="text" id="username-delete" required>
+        <br>
+        <button type="submit">Delete Profile</button>
+    </form>
+
+    <script>
+         async function checkCredentials() {
+            const response = await fetch('http://127.0.0.1:4001/auth/user', {
+                credentials: "include"
+            });
+            const user = (await response.json())?.payload;
+            if (!user) {
+                alert('Invalid credentials');
+                window.location.href = './index.html';
+                return
+            }
+        }
+        document.getElementById("delete-user-form").addEventListener("submit", async (event) => {
+	        event.preventDefault();
+            let username = document.getElementById("username-delete");
+            const response = await fetch(`http://localhost:4001/auth/delete/user`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username
+                })
+            });
+            const result = await response.json();
+            // handle response
+            if (result.ok) {
+                alert("User deleted successfully");
+                return;
+            } else {
+                alert("Couldn't delete user, check username");
+            }
+        });
+
+        checkCredentials();
+    </script>
+</body>
+
+</html>
