@@ -178,10 +178,10 @@ const update_user_profile = async (req, res) => {
 };
 // function to delete user
 const delete_user_by_username = async (req,res) => {
-  let username_to_delete = req.username;
+  let {username} = req.body;
   let success = await UserModel.destroy({
     where: {
-      username: username_to_delete
+      username: username
     }
   });
   if (!success) {
